@@ -10,6 +10,7 @@ export function TodoApp({ create = createTodo }: TodoAppProps) {
   const [title, setTitle] = useState('')
   const [todos, setTodos] = useState<Todo[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
   const [isCreating, setIsCreating] = useState(false)
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -26,11 +27,13 @@ export function TodoApp({ create = createTodo }: TodoAppProps) {
     }
 
     setError(null)
+    setSuccess(null)
     setIsCreating(true)
 
     try {
       const todo = await create({ title: trimmedTitle })
       setTodos((currentTodos) => [...currentTodos, todo])
+      setSuccess(`Created TODO: ${todo.title}`)
       setTitle('')
     } catch (caughtError) {
       setError(
@@ -65,6 +68,7 @@ export function TodoApp({ create = createTodo }: TodoAppProps) {
             {error}
           </p>
         )}
+        {success && <p role="status" aria-live="polite">{success}</p>}
       </form>
 
       <section aria-labelledby="created-todos-heading">

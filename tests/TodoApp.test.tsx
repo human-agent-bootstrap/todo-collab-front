@@ -47,6 +47,8 @@ describe('TodoApp', () => {
     await user.type(screen.getByLabelText('TODO title'), 'Buy milk{Enter}')
 
     expect(await screen.findByRole('listitem', { name: 'Buy milk' })).toBeVisible()
+    expect(screen.getByRole('status')).toHaveAttribute('aria-live', 'polite')
+    expect(screen.getByRole('status')).toHaveTextContent('Created TODO: Buy milk')
     expect(screen.getByLabelText('TODO title')).toHaveValue('')
   })
 

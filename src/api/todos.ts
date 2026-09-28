@@ -39,6 +39,20 @@ function isErrorResponse(value: unknown): value is ErrorResponse {
     && typeof value.message === 'string'
 }
 
+function isTodo(value: unknown): value is Todo {
+  return typeof value === 'object'
+    && value !== null
+    && 'id' in value
+    && typeof value.id === 'string'
+    && value.id.length > 0
+    && 'title' in value
+    && typeof value.title === 'string'
+    && value.title.length >= 1
+    && value.title.length <= 100
+    && 'completed' in value
+    && value.completed === false
+}
+
 export async function createTodo(todo: TodoCreate): Promise<Todo> {
   let response: Response
 
@@ -54,11 +68,15 @@ export async function createTodo(todo: TodoCreate): Promise<Todo> {
 
   const body: unknown = await response.json().catch(() => undefined)
 
-  if (!response.ok) {
+  if (response.status !== 201) {
     throw new TodoApiError(
       isErrorResponse(body) ? body.message : 'Unable to create the TODO. Please try again.',
     )
   }
 
-  return body as Todo
+  if (!isTodo(body)) {
+    throw new TodoApiError('Unable to create the TODO. Please try again.')
+  }
+
+  return body
 }
