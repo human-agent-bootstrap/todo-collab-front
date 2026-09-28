@@ -54,7 +54,7 @@ input:disabled {
 
 input:focus-visible,
 button:focus-visible {
-  outline: 3px solid #84adff;
+  outline: 3px solid #4c7bd9;
   outline-offset: 2px;
 }
 
